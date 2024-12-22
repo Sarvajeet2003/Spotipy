@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Emotion-based Music Player</title>
+
+  <!-- Example of including a Google font (Roboto) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <!-- Inline CSS for demo purposes -->
+  <style>
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 1rem;
+      font-weight: 300;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0.5rem auto 2rem;
+    }
+
+    .btn-container {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      background-color: #fff;
+      color: #333;
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 5px;
+      font-weight: 500;
+      transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #e0e0e0;
+      color: #000;
+      transform: translateY(-2px);
+    }
+
+    .song-info {
+      margin-top: 2rem;
+    }
+
+    .song-info h2 {
+      font-weight: 500;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .album-art-container {
+      margin-top: 1rem;
+    }
+
+    .album-art-container img {
+      width: 250px;
+      max-width: 90%;
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.5);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .notes {
+      margin-top: 2rem;
+      text-align: center;
+      max-width: 600px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      opacity: 0.9;
+    }
+
+    .notes code {
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 1rem;
+      width: 100%;
+      text-align: center;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Emotion-based Music Player</h1>
+    <p>Experience dynamic music based on your real-time facial expressions.</p>
+  </header>
+
+  <div class="btn-container">
+    <!-- "Start" button -->
+    <a class="btn" href="{{ url_for('start') }}">Start Detection</a>
+
+    <!-- "Stop" button -->
+    <a class="btn" href="{{ url_for('stop') }}">Stop Detection</a>
+  </div>
+
+  <div class="song-info">
+    <h2>Currently Playing: <span id="current-song">None</span></h2>
+    <div class="album-art-container">
+      <img id="album-art" src="" alt="Album Art" />
+    </div>
+  </div>
+
+  <div class="notes">
+    <p>
+      Once you click <strong>Start Detection</strong>, a new webcam window will open, analyzing your face 
+      and selecting music according to your dominant emotion.<br/>
+      Press <code>q</code> in the OpenCV window to stop the detection manually 
+      (or click <strong>Stop Detection</strong> here on the page).
+    </p>
+  </div>
+
+  <footer>
+    &copy; {{ current_year|default(2024) }} Emotion-based Music Player
+  </footer>
+
+  <script>
+    function fetchSong() {
+      fetch('/current_song')
+        .then(response => response.json())
+        .then(data => {
+          // Update the current song name
+          document.getElementById('current-song').textContent = data.track_name || 'None';
+          // Update the album art image
+          if (data.album_art) {
+            document.getElementById('album-art').src = data.album_art;
+            document.getElementById('album-art').style.display = 'inline';
+          } else {
+            document.getElementById('album-art').style.display = 'none';
+          }
+        })
+        .catch(err => console.error(err));
+    }
+
+    // Check the current song every 5 seconds
+    setInterval(fetchSong, 5000);
+
+    // Fetch immediately on page load
+    fetchSong();
+  </script>
+</body>
+</html>
