@@ -1,7 +1,6 @@
 flask==2.3.3
 opencv-python==4.8.0.76
-numpy==1.23.5
-keras==2.13.1
-tensorflow==2.13.1
+numpy==1.26.0
+tensorflow==2.16.2
 spotipy==2.23.0
-pyttsx3==2.90
+pyttsx3==2.90; platform_system != 'Darwin'
