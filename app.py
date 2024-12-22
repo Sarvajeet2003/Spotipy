@@ -3,8 +3,6 @@ import subprocess
 import os
 import json
 import signal  # For terminating processes
-import sys
-sys.path.insert(0, './vendor')
 
 app = Flask(__name__)
 
@@ -62,5 +60,4 @@ def current_song():
     return jsonify(data)
 
 if __name__ == '__main__':
-    # By default runs on http://127.0.0.1:5000
-    app.run(debug=True)
+    app.run()
