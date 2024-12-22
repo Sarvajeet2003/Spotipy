@@ -10,16 +10,16 @@ app = Flask(__name__)
 process = None
 
 # Detect environment: DEVELOPMENT (local) or PRODUCTION (Render)
-ENV = os.getenv("ENVIRONMENT", "DEVELOPMENT")
+# ENV = os.getenv("ENVIRONMENT", "DEVELOPMENT")
 
 # Camera initialization
 # if ENV == "PRODUCTION":
-print("Running in production mode. Mocking camera.")
+# print("Running in production mode. Mocking camera.")
 cap = None  # No actual camera access in production
 
 def mock_read():
     # Simulate reading frames using a placeholder image
-    frame = cv2.imread("static/sample_image.jpg")  # Use a static sample image
+    frame = cv2.imread("static/image.png")  # Use a static sample image
     if frame is None:
         return False, None
     return True, frame
@@ -33,12 +33,6 @@ cap = type("MockCapture", (object,), {
     "isOpened": mock_is_opened,
     "release": lambda: None,
 })()
-# else:
-#     print("Running in development mode. Using real camera.")
-#     cap = cv2.VideoCapture(0)
-#     if not cap.isOpened():
-#         print("Unable to access the camera.")
-#         exit()
 
 
 @app.route('/')
